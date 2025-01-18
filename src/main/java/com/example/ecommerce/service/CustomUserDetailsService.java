@@ -1,5 +1,9 @@
 package com.example.ecommerce.service;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,10 +26,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
         
+        // Convert roles to SimpleGrantedAuthority
+        Collection<SimpleGrantedAuthority> authorities = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName())) // Add "ROLE_" prefix
+                .collect(Collectors.toList());
+
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRoles().stream().map(role -> role.getName()).toArray(String[]::new))
+                .authorities(authorities) // Set authorities as granted authorities
                 .build();
     }
 }
