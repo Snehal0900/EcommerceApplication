@@ -23,4 +23,8 @@ public class Roles {
 
     @Column(nullable = false, unique = true)
     private String name;
+    
+    public String getName() {
+        return name;
+    }
 }
