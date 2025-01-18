@@ -5,6 +5,7 @@ import com.example.ecommerce.entity.Roles;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.repository.RolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,25 +23,29 @@ public class RegisterController {
 
     @Autowired
     private RolesRepository rolesRepository;
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
-    // Display the registration page (GET request)
     @GetMapping("/register")
     public String showRegistrationForm() {
         return "register";  // This should map to the register.html page
     }
 
-    // Registration endpoint for creating a new user (POST request)
     @PostMapping("/register")
     public String registerUser(@RequestParam String username,
                                @RequestParam String password,
                                @RequestParam String role,
                                Model model) {
-    	System.out.println("POST Register endpoint hit!!");
+        System.out.println("POST Register endpoint hit!!");
         try {
             // Create a new user object
             User user = new User();
             user.setUsername(username);
-            user.setPassword(password);
+
+            // Encode the password
+            String encodedPassword = passwordEncoder.encode(password);
+            user.setPassword(encodedPassword);
 
             // Assign the appropriate role (SELLER or BUYER)
             Roles userRole = rolesRepository.findByName(role)
@@ -49,16 +54,19 @@ public class RegisterController {
             roles.add(userRole);
 
             user.setRoles(roles);
+
+            // Save the user to the database
             userRepository.save(user);
 
             model.addAttribute("message", "User registered successfully with role: " + role);
             
-            System.out.println(user.getUsername() + " Registered successfully!!!");
-            return "login"; // Redirect to login after successful registration
+            System.out.println(user.getUsername() + " registered successfully!!!");
+            return "redirect:/auth/login"; // Redirect to login after successful registration
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             System.out.println(e.getMessage());
             return "register"; // Redirect back to registration if an error occurs
         }
     }
+
 }

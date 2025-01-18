@@ -1,57 +1,74 @@
 package com.example.ecommerce.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.ecommerce.dto.LoginRequest;
 import com.example.ecommerce.util.JwtUtil;
 
-@RestController
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
+
+
+@Controller
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
-
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
+	@Autowired
+    private AuthenticationManager authenticationManager;
+	
+	@Autowired
+    private JwtUtil jwtUtil;
+    
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login";  // This should map to the login.html page
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest loginRequest) {
-    	System.out.println("POST Login endpoint hit!!");
+    public ResponseEntity<String> login(@RequestParam String username, 
+                                        @RequestParam String password, 
+                                        HttpServletResponse response) {
     	
+    	System.out.println("POST Login endpoint hit!!!");
         try {
+            // Authenticate the user
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(username, password)
             );
 
+            // Get the user details
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+            // Generate the JWT token
             String token = jwtUtil.generateToken(userDetails.getUsername());
 
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-            
-            System.out.println("token - " + token);
-            return ResponseEntity.ok(response);
+            // Set token in HttpOnly cookie
+            Cookie cookie = new Cookie("authToken", token);
+            cookie.setHttpOnly(true); // Makes the cookie inaccessible to JavaScript
+            cookie.setSecure(true); // Use HTTPS (set to false if not using HTTPS)
+            cookie.setPath("/"); // Cookie is valid for the entire application
+            cookie.setMaxAge(60 * 60); // Set expiration time (1 hour for example)
+            response.addCookie(cookie);
 
+            return ResponseEntity.ok("Login successful");
+            
         } catch (Exception e) {
-        	System.out.println("Invalid credentials");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                 .body(Map.of("error", "Invalid credentials"));
+                                 .body("Invalid credentials");
         }
     }
+
+
 }
 

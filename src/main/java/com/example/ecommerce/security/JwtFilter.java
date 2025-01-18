@@ -12,6 +12,7 @@ import com.example.ecommerce.util.JwtUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -30,10 +31,19 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String token = request.getHeader("Authorization");
+        // Get the token from the cookies
+        String token = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("auth_token".equals(cookie.getName())) { // Assuming the cookie name is "auth_token"
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
 
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // Remove "Bearer " part
+        if (token != null) {
             String username = jwtUtil.extractUsername(token);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -72,7 +72,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-<<<<<<< HEAD
 		    <groupId>io.jsonwebtoken</groupId>
 		    <artifactId>jjwt-api</artifactId>
 		    <version>0.11.5</version>
@@ -87,10 +86,10 @@
 		    <groupId>io.jsonwebtoken</groupId>
 		    <artifactId>jjwt-jackson</artifactId>
 		    <version>0.11.5</version>
-=======
+		</dependency>
+		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-devtools</artifactId>
->>>>>>> feature/user-interface
 		    <scope>runtime</scope>
 		</dependency>
 	</dependencies>
