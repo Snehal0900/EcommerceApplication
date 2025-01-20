@@ -36,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("auth_token".equals(cookie.getName())) { // Assuming the cookie name is "auth_token"
+                if ("authToken".equals(cookie.getName())) { // Assuming the cookie name is "auth_token"
                     token = cookie.getValue();
                     break;
                 }
@@ -44,12 +44,16 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if (token != null) {
+        	System.out.println("Token: " + token);
             String username = jwtUtil.extractUsername(token);
+            System.out.println("Extracted Username: " + username);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                if (jwtUtil.validateToken(token, username)) {
+                if (jwtUtil.validateToken(token)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(username, null, customUserDetailsService.loadUserByUsername(username).getAuthorities());
+                    
+                    System.out.println("Token validated!!"  + authenticationToken);
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
