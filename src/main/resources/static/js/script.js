@@ -39,8 +39,23 @@ function login(username, password) {
 			// Store token in cookie (if not already set by the server)
 		    document.cookie = `authToken=${data.authToken}; path=/; HttpOnly=false`;
 
-		    // Redirect to the home page
-		    window.location.href = "/home";
+			const roles = data.roles || [];
+
+			if (roles.includes('ROLE_ADMIN')) {
+			                // Redirect to specific admin pages based on permissions
+				if (roles.includes('ROLE_CREATE_ROLE')) {
+			    	window.location.href = '/admin/createrole'; // Example redirect to create role page
+			    } 
+				else if (roles.includes('ROLE_MANAGE_USERS')) {
+					window.location.href = '/admin/users'; // Example redirect to user management
+			    } 
+				else {
+			        window.location.href = '/admin/dashboard'; // Default admin page
+			    }
+			 } 
+			 else {
+			    window.location.href = '/home'; // Redirect to home for regular users
+			 }
 		}			
 		else {
 			console.error("No token received from the server");
@@ -104,3 +119,81 @@ if (logoutButton) {
             .catch((error) => console.error("Error during logout:", error));
     });
 }
+
+
+const submitRole = document.getElementById("submitRole");
+if (submitRole) {
+    submitRole.addEventListener("click", function (event) {
+        event.preventDefault();  // Prevent form submission
+
+        const roleName = document.getElementById("roleName").value;
+
+        // Send POST request to create the role
+        fetch('/admin/createRole', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: roleName })  // Ensure correct key name
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = "/admin/dashboard";  // Redirect on success
+            } else {
+                console.error('Role creation failed');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+}
+
+function openEditModal(userId, username, role) {
+            document.getElementById('editUserId').value = userId;
+            document.getElementById('editUsername').value = username;
+            document.getElementById('editRole').value = role;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        // Close Edit Modal
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Delete User
+        function deleteUser(userId) {
+            if (confirm("Are you sure you want to delete this user?")) {
+                fetch(`/admin/user/${userId}/delete`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();  // Reload the page to update the user list
+                    } else {
+                        console.error('Error deleting user');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        // Edit User
+        document.getElementById('editUserForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent form submission
+
+            const userId = document.getElementById('editUserId').value;
+            const username = document.getElementById('editUsername').value;
+            const role = document.getElementById('editRole').value;
+
+            fetch(`/admin/user/${userId}/edit?username=${username}&role=${role}`, {
+                method: 'POST',
+            })
+            .then(response => {
+                if (response.ok) {
+                    closeEditModal();
+                    window.location.reload();  // Reload the page to update the user list
+                } else {
+                    console.error('Error editing user');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });

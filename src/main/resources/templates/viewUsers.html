@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Users</title>
+    <script src="/js/script.js" defer></script>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h1>Users List</h1>
+     <nav>
+        <a href="/admin/dashboard">Dashboard</a>
+        <button id="logoutButton">Logout</button>
+    </nav>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.username}">Username</td>
+                <td>
+			        <ul>
+			            <li th:each="role : ${user.roles}" th:text="${role.name}"></li>
+			        </ul>
+			    </td>
+                <td>
+                    <!-- Edit User Button -->
+		            <a th:href="@{/admin/user/{userId}/edit(userId=${user.id})}">Edit</a>
+		            <!-- Delete User Button -->
+		            <form th:action="@{/admin/user/{userId}/delete(userId=${user.id})}" style="display:inline;">
+		                <input type="hidden" name="_method" value="delete" />
+		                <button type="submit" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+		            </form>
+            	</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Edit User Modal -->
+    <div id="editModal" style="display:none;">
+        <h2>Edit User</h2>
+        <form id="editUserForm">
+            <input type="hidden" id="editUserId">
+            <label for="editUsername">Username:</label>
+            <input type="text" id="editUsername" name="username" required><br><br>
+            <label for="editRole">Role:</label>
+            <input type="text" id="editRole" name="role" required><br><br>
+            <button type="submit">Save</button>
+            <button type="button" onclick="closeEditModal()">Cancel</button>
+        </form>
+    </div>
+</body>
+</html>

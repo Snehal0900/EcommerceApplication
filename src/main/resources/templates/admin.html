@@ -1,71 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Admin</title>
-    <link rel="stylesheet" href="/styles.css"> <!-- Add any necessary CSS files -->
+    <title>Admin Dashboard</title>
+    <script src="/js/script.js" defer></script>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-
     <h1>Admin Dashboard</h1>
+	
+    <nav>
+    	<button id="logoutButton">Logout</button>
+        <a href="/admin/users">View Users</a> | 
+        <a href="/admin/createRolePage">Create Role</a> |
+    </nav>
 
-    <!-- Users List Section -->
-    <h2>Users List</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${user.username}">Username</td>
-                <td th:text="${user.role.name}">Role</td>
-                <td>
-                    <button th:onclick="'editRole(' + ${user.id} + ')'" class="edit-btn">Edit Role</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- Add New Role Section -->
-    <h2>Create New Role</h2>
-    <form id="createRoleForm" th:action="@{/admin/createRole}" method="post">
-        <label for="roleName">Role Name:</label>
-        <input type="text" id="roleName" name="roleName" required><br><br>
-        <button type="submit">Create Role</button>
-    </form>
-
-    <!-- Edit Role Modal -->
-    <div id="editRoleModal" style="display:none;">
-        <h2>Edit Role</h2>
-        <form id="editRoleForm" th:action="@{/admin/editRole}" method="post">
-            <input type="hidden" id="editRoleId" name="roleId">
-            <label for="editRoleName">Role Name:</label>
-            <input type="text" id="editRoleName" name="roleName" required><br><br>
-            <button type="submit">Update Role</button>
-        </form>
-        <button onclick="closeEditModal()">Close</button>
+    <div>
+        <h2>Welcome to the Admin Dashboard</h2>
     </div>
-
-    <script>
-        function editRole(userId) {
-            // Get the role information for the selected user and show the edit modal.
-            fetch(`/admin/user/${userId}/role`)
-                .then(response => response.json())
-                .then(role => {
-                    document.getElementById('editRoleId').value = role.id;
-                    document.getElementById('editRoleName').value = role.name;
-                    document.getElementById('editRoleModal').style.display = 'block';
-                })
-                .catch(error => console.error('Error fetching role:', error));
-        }
-
-        function closeEditModal() {
-            document.getElementById('editRoleModal').style.display = 'none';
-        }
-    </script>
-
 </body>
 </html>

@@ -1,7 +1,9 @@
 package com.example.ecommerce.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +42,8 @@ public class AuthController {
         return "login";  // This should map to the login.html page
     }
 
-    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response, HttpServletRequest request) {
+    @PostMapping(value = "/login")
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response, HttpServletRequest request) {
         System.out.println("POST Login endpoint hit!!");
         
         System.out.println("Content-Type: " + request.getContentType()); // Log the Content-Type header
@@ -53,6 +56,9 @@ public class AuthController {
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String token = jwtUtil.generateToken(userDetails.getUsername());
+            
+            List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+
 
             // Set JWT token as a cookie
             Cookie cookie = new Cookie("authToken", token);  // Cookie name should be 'token'
@@ -66,9 +72,11 @@ public class AuthController {
             System.out.println("cookie = " + cookie);
 
             // Return token in response body as well
-            Map<String, String> responseMap = new HashMap<>();
+            Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("authToken", token);
             System.out.println("token " + token);
+            responseMap.put("roles", roles);
+
 
             return ResponseEntity.ok(responseMap);
         } catch (Exception e) {
