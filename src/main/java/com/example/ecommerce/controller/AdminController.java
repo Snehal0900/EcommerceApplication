@@ -1,5 +1,6 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.dto.EditUserRequest;
 import com.example.ecommerce.entity.Roles;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.service.RolesService;
@@ -44,20 +45,32 @@ public class AdminController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/createRole")
-    public String createRole(@RequestBody Roles roles) {
+    public String createRole(@RequestParam String roleName) {
     	
-        if (roles.getName() == null || roles.getName().isEmpty()) {
-            System.out.println(roles.getName());
+    	if (roleName == null || roleName.isEmpty())  {
             throw new IllegalArgumentException("Role name cannot be empty");
         }
-        rolesService.createRole(roles);
+    	
+    	Roles role = new Roles();
+        role.setName(roleName);
+        rolesService.createRole(role);
         return "redirect:/admin/dashboard";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/user/{userId}/edit")
+    public String editUser(@PathVariable Long userId, Model model) {
+    	User user = userService.findUserById(userId);
+    	List<Roles> roles = rolesService.getAllRoles();
+        model.addAttribute("user", user);
+        model.addAttribute("roles", roles);
+        return "editUser"; // Map to edit-user.html
     }
 
 	@Secured("ROLE_ADMIN")
 	@PostMapping("/user/{userId}/edit")
-	public String editUser(@PathVariable Long userId, @RequestParam String username, @RequestParam String role) {
-	    userService.editUser(userId, username, role); // Implement this method in your service
+	public String editUser(@PathVariable Long userId, @ModelAttribute EditUserRequest editUserRequest) {
+	    userService.editUser(userId, editUserRequest.getUsername(), editUserRequest.getRole());
 	    return "redirect:/admin/users";  // Redirect back to users list
 	}
 	

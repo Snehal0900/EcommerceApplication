@@ -2,6 +2,9 @@ package com.example.ecommerce.service;
 
 import com.example.ecommerce.entity.Roles;
 import com.example.ecommerce.repository.RolesRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +23,10 @@ public class RolesImpl implements RolesService {
     public Roles updateRole(Roles roles) {
         return rolesRepository.save(roles);
     }
+
+	@Override
+	public List<Roles> getAllRoles() {
+		return rolesRepository.findAll();
+	}
 }
 

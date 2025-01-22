@@ -1,17 +1,22 @@
 package com.example.ecommerce.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ecommerce.dto.LoginRequest;
 import com.example.ecommerce.util.JwtUtil;
@@ -19,24 +24,19 @@ import com.example.ecommerce.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Controller
-@RequestMapping("/auth")
-public class AuthController {
+@RestController
+@RequestMapping("/api/auth")
+public class ApiAuthController {
 
 	@Autowired
     private AuthenticationManager authenticationManager;
 	
 	@Autowired
     private JwtUtil jwtUtil;
-    
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "login";  // This should map to the login.html page
-    }
-
-    @PostMapping(value = "/login")
-    public String login(@ModelAttribute LoginRequest loginRequest, HttpServletResponse response, Model model) {   
-    	System.out.println("POST Login endpoint hit!!");
+	
+	@PostMapping(value = "/login")
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        System.out.println("POST Login endpoint hit!!");
         
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -44,6 +44,9 @@ public class AuthController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String token = jwtUtil.generateToken(userDetails.getUsername());
             
+            List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+
+
             // Set JWT token as a cookie
             Cookie cookie = new Cookie("authToken", token);  // Cookie name should be 'token'
             cookie.setHttpOnly(true);  // Make it HTTP-only for security
@@ -53,24 +56,23 @@ public class AuthController {
 
             response.addCookie(cookie);  // Add the cookie to the response
          
+            // Return token in response body as well
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("authToken", token);
             System.out.println("token " + token);
-            
-            boolean isAdmin = userDetails.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
-            if (isAdmin) {
-                return "redirect:/admin/dashboard"; // Redirect to admin dashboard for admins
-            }
-            
-            return "redirect:/home";
+            responseMap.put("roles", roles);
+
+
+            return ResponseEntity.ok(responseMap);
         } 
         catch (Exception e) {
-            model.addAttribute("error", "Invalid credentials");
-            return "login"; 
+            System.out.println("Invalid credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
         }
     }
-
-    
-    @PostMapping("/logout")
-    public String logout(HttpServletResponse response) {
+	
+	@PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
         // Clear the cookie
         Cookie cookie = new Cookie("authToken", null); // Setting the value to null
         cookie.setHttpOnly(true);
@@ -79,7 +81,6 @@ public class AuthController {
         cookie.setMaxAge(0); // Expire the cookie immediately
         response.addCookie(cookie);
 
-        return "redirect:/auth/login";
+        return ResponseEntity.ok("Logged out successfully");
     }
 }
-

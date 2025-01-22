@@ -10,10 +10,12 @@
 
     <nav>
         <a href="/admin/dashboard">Dashboard</a>
-        <button id="logoutButton">Logout</button>
+        <form th:action="@{/auth/logout}" method="post">
+		    <button type="submit">Logout</button>
+		</form>
     </nav>
 
-	<form id="createRoleForm">
+	<form th:action="@{/admin/createRole}" method="post">
 	    <label for="roleName">Role Name:</label>
 	    <input type="text" id="roleName" name="roleName" required><br><br>
 	    <button id="submitRole" type="submit">Create Role</button>  

@@ -9,6 +9,8 @@
 	<body>
 	    <h2>WELCOME TO HOME PAGE</h2>
 	    
-	    <button id="logoutButton">Logout</button>
+	    <form th:action="@{/auth/logout}" method="post">
+		    <button type="submit">Logout</button>
+		</form>
 	</body>
 </html>

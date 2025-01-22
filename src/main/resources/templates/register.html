@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html>
 	<head>  
-		<title>Login</title>  
+		<title>Register</title>  
 	</head> 
 	<body>
 	    <h2>Register</h2>
 	    <form action="/register" method="post">
-	        <label for="username">Username:</label>
-	        <input type="text" id="username" name="username" required><br><br>
-	
-	        <label for="password">Password:</label>
-	        <input type="password" id="password" name="password" required><br><br>
-	
-	        <label for="role">Role (SELLER/BUYER/ADMIN):</label>
-	        <input type="text" id="role" name="role" required><br><br>
-	
-	        <button type="submit">Register</button>
-	    </form>
+		    <label for="username">Username:</label>
+		    <input type="text" id="username" name="username" required><br><br>
+		
+		    <label for="password">Password:</label>
+		    <input type="password" id="password" name="password" required><br><br>
+		
+		    <label for="role">Role:</label>
+		    <select id="role" name="role">
+		        <option th:each="role : ${roles}" 
+		                th:value="${role.name}" 
+		                th:text="${role.name}">
+		        </option>
+		    </select><br><br>
+		
+		    <button type="submit">Register</button>
+		    <a th:href="@{/auth/login}">Login</a>
+		</form>
 	</body>
 </html>

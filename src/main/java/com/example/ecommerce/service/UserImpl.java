@@ -1,5 +1,7 @@
 package com.example.ecommerce.service;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.ecommerce.entity.Roles;
 import com.example.ecommerce.entity.User;
+import com.example.ecommerce.repository.RolesRepository;
 import com.example.ecommerce.repository.UserRepository;
 
 @Service
@@ -20,11 +23,30 @@ public class UserImpl implements UserService {
 	@Autowired
     private UserRepository userRepository;
 	
+	@Autowired
+	private RolesRepository rolesRepository;
+	
 	@Override
-	public void registerUser(User user) {
-		String encodedPassword = passwordEncoder.encode(user.getPassword());
+	public void registerUser(String username, String password, String role) {
+		
+		User user = new User();
+        user.setUsername(username);
+        
+		String encodedPassword = passwordEncoder.encode(password);
         user.setPassword(encodedPassword);
+        
+        
+        Roles userRole = rolesRepository.findByName(role).orElseThrow(() -> new IllegalArgumentException("Role not found"));
+        Set<Roles> roles = new HashSet<>();
+        roles.add(userRole);
+        
+        user.setRoles(roles);
+        
         userRepository.save(user);
+	}
+	
+	public User findUserById(Long userId) {
+		return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 	}
 	
 	public List<User> getAllUsers() {
@@ -37,26 +59,28 @@ public class UserImpl implements UserService {
         return user.getRoles().stream().findFirst().orElseThrow(() -> new RuntimeException("No role found for the user"));
     }
 
-	@Override
-	public void editUser(Long userId, String username, String role) {
-		User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    @Override
+    public void editUser(Long userId, String username, String role) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         user.setUsername(username);
-        
-        // Set role based on role passed (assuming 'role' is a string name)
-        Roles userRole = new Roles();
-        userRole.setName(role);  // Here you should load the actual Role from the database if it's not just a string
 
-        user.setRoles(Set.of(userRole)); // Assuming user has a single role
+        // Fetch the role from the database
+        Roles newRole = rolesRepository.findByName(role).orElseThrow(() -> new IllegalArgumentException("Role not found"));
+
+        user.setRoles(new HashSet<>(Collections.singleton(newRole)));
 
         userRepository.save(user);
-	}
+    }
 
 	@Override
 	public void deleteUser(Long userId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-		userRepository.delete(user);
+		
+		user.getRoles().clear();
+		userRepository.save(user);
+	    
+		userRepository.deleteById(userId);
 	}
 
 }

@@ -7,7 +7,9 @@ import com.example.ecommerce.entity.User;
 
 public interface UserService {
 	
-	public void registerUser(User user);
+	public void registerUser(String username, String password, String role);
+	
+	public User findUserById(Long userId);
 	
 	public List<User> getAllUsers();
 	
