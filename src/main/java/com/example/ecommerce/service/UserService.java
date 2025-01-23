@@ -11,6 +11,8 @@ public interface UserService {
 	
 	public User findUserById(Long userId);
 	
+	public User findUserByUsername(String username);
+	
 	public List<User> getAllUsers();
 	
 	public Roles getUserRole(Long userId);

@@ -3,9 +3,11 @@ package com.example.ecommerce.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,13 +40,9 @@ public class ApiAdminController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/createRole")
-    public ResponseEntity<String> createRole(@RequestBody Roles role) {
-        if (role.getName() == null || role.getName().isEmpty()) {
-            return ResponseEntity.badRequest().body("Role is Empty");  
-        }
-        rolesService.createRole(role);
-        return ResponseEntity.ok("Role created successfully");  
+    @GetMapping("/roles")
+    public List<Roles> getAllRoles(Model model) {
+        return rolesService.getAllRoles();
     }
     
     @Secured("ROLE_ADMIN")
@@ -58,6 +56,16 @@ public class ApiAdminController {
         userService.editUser(userId, editUserRequest.getUsername(), editUserRequest.getRole());  // Update user details
         return ResponseEntity.ok("New Details saved successfully"); 
     }
+    
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/createRole")
+    public ResponseEntity<String> createRole(@RequestBody Roles role) {
+        if (role.getName() == null || role.getName().isEmpty()) {
+            return ResponseEntity.badRequest().body("Role is Empty");  
+        }
+        rolesService.createRole(role);
+        return ResponseEntity.ok("Role created successfully");  
+    }
 
 
     @Secured("ROLE_ADMIN")
@@ -65,5 +73,18 @@ public class ApiAdminController {
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok("User deleted successfully");
+    }    
+    
+    @Secured("ROLE_ADMIN")
+    @DeleteMapping("/roles/{roleId}/delete")
+    public ResponseEntity<String> deleteRole(@PathVariable long roleId, Model model) {
+    	try {
+    		rolesService.deleteRoleById(roleId);
+    	}
+        catch (DataIntegrityViolationException e) {
+        	return ResponseEntity.status(HttpStatus.CONFLICT).body("Role is assigned to users and cannot be deleted.");
+        }
+       
+    	return ResponseEntity.ok("Role deleted successfully");
     }
 }

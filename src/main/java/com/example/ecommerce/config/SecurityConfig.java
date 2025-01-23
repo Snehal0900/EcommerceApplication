@@ -34,9 +34,9 @@ public class SecurityConfig {
     	http.authorizeRequests()
             .requestMatchers("/auth/login", "api/auth/login", "/register", "/api/register", "/css/**", "/js/**").permitAll() // Allow unauthenticated access to login and register
             .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
-            .requestMatchers("/seller/**").hasRole("SELLER")
-            .requestMatchers("/buyer/**").hasRole("BUYER")
-            .requestMatchers("/", "/home").authenticated() // Ensure authenticated access to /home
+            .requestMatchers("/", "/home/seller").hasRole("SELLER")
+            .requestMatchers("/", "/home/buyer").hasRole("BUYER")
+            .requestMatchers("/", "/home").authenticated()
             .anyRequest().authenticated() // Secure all other endpoints
             .and()
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter to handle stateless authentication

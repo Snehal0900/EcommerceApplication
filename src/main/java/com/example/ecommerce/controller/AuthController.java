@@ -55,11 +55,20 @@ public class AuthController {
             System.out.println("token " + token);
             
             boolean isAdmin = userDetails.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+            boolean isSeller = userDetails.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_SELLER"));
+            boolean isBuyer = userDetails.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_BUYER"));
+            
             if (isAdmin) {
                 return "redirect:/admin/dashboard"; // Redirect to admin dashboard for admins
             }
+            else if (isSeller) {
+            	return "redirect:/home/seller"; // Redirect to seller home page for sellers
+            }
+            else if(isBuyer){
+            	return "redirect:/home/buyer"; // Redirect to buyer home page for buyers
+            }
             
-            return "redirect:/home";
+            return "redirect:/auth/login";
         } 
         catch (Exception e) {
             model.addAttribute("error", "Invalid credentials");

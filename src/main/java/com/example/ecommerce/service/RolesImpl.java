@@ -23,6 +23,14 @@ public class RolesImpl implements RolesService {
     public Roles updateRole(Roles roles) {
         return rolesRepository.save(roles);
     }
+    
+    public Roles deleteRoleById(Long id) {
+    	Roles role = rolesRepository.findById(id).orElse(null);
+        if (role != null) {
+            rolesRepository.deleteById(id);
+        }
+        return role;
+    }
 
 	@Override
 	public List<Roles> getAllRoles() {

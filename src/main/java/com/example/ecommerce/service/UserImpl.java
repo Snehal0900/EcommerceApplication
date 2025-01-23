@@ -49,6 +49,10 @@ public class UserImpl implements UserService {
 		return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 	}
 	
+	public User findUserByUsername(String username) {
+		return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + username));
+	}
+	
 	public List<User> getAllUsers() {
         return userRepository.findAll();
     }
