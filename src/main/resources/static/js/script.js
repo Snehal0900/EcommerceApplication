@@ -31,3 +31,19 @@ if (token) {
 else {
     console.log("No token found in cookies");
 }
+
+function updatePlaceholder() {
+	const searchType = document.getElementById("searchType").value;
+	const input = document.getElementById("searchValue");
+
+	if (searchType === "name") {
+		input.placeholder = "Enter product name";
+		input.type = "text";
+	} else if (searchType === "minPrice") {
+		input.placeholder = "Enter minimum price";
+		input.type = "number";
+	} else if (searchType === "maxPrice") {
+		input.placeholder = "Enter maximum price";
+		input.type = "number";
+	}
+}

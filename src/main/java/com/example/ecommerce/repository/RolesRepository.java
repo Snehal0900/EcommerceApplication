@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.ecommerce.entity.Roles;
 
 public interface RolesRepository extends JpaRepository<Roles, Long> {
-	   Optional<Roles> findByName(String name);
+	Optional<Roles> findByName(String name);
 }

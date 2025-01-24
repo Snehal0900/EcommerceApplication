@@ -65,7 +65,7 @@ public class AuthController {
             	return "redirect:/home/seller"; // Redirect to seller home page for sellers
             }
             else if(isBuyer){
-            	return "redirect:/home/buyer"; // Redirect to buyer home page for buyers
+            	return "redirect:/home/buyer/view"; // Redirect to buyer home page for buyers
             }
             
             return "redirect:/auth/login";

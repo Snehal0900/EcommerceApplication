@@ -1,16 +1,48 @@
 <!DOCTYPE html>
-<html>
-	<head>  
-		<title>Home</title>  
-		
-		<script src="/js/script.js" defer></script>
-	</head> 
-	
-	<body>
-	    <h2>WELCOME TO BUYER'S HOME PAGE</h2>
-	    
-	    <form th:action="@{/auth/logout}" method="post">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View</title>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Welcome to the Buyer Homepage</h1>
+    
+    <nav>
+    	<form th:action="@{/auth/logout}" method="post">
 		    <button type="submit">Logout</button>
 		</form>
-	</body>
+		
+		<!-- Optionally, add a search/filter form -->
+	    <form action="/home/buyer/search" method="get">
+		    <!-- Dropdown for Search Criteria -->
+		    <label for="searchType">Search By:</label>
+		    <select id="searchType" name="searchType" onchange="updatePlaceholder()">
+		        <option value="name">Name</option>
+		        <option value="minPrice">Min Price</option>
+		        <option value="maxPrice">Max Price</option>
+		    </select>
+		    <br><br>
+		
+		    <!-- Input Box for Value -->
+		    <label for="searchValue">Enter Value:</label>
+		    <input type="text" id="searchValue" name="searchValue" placeholder="Enter value here" />
+		    <br><br>
+		
+		    <button type="submit">Search</button>
+		</form>
+	</nav>
+
+    <!-- Display list of products -->
+    <div th:if="${products != null}">
+        <h2>Available Products</h2>
+        <div th:each="product : ${products}">
+            <div>
+                <img th:src="@{${product.imagePath}}" alt="Product Image" width="150" height="150"/>
+                <h3 th:text="${product.name}"></h3>
+                <p th:text="${product.description}"></p>
+                <p th:text="${product.price}"></p>
+            </div>
+        </div>
+    </div>
+</body>
 </html>

@@ -32,9 +32,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     	http.authorizeRequests()
-            .requestMatchers("/auth/login", "api/auth/login", "/register", "/api/register", "/css/**", "/js/**").permitAll() // Allow unauthenticated access to login and register
+            .requestMatchers("/auth/login", "api/auth/login", "/register", "/api/register", "/css/**", "/js/**", "/images/**", "/error").permitAll() // Allow unauthenticated access to login and register
             .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
             .requestMatchers("/", "/home/seller").hasRole("SELLER")
+            .requestMatchers("/", "/seller/**").hasRole("SELLER")
             .requestMatchers("/", "/home/buyer").hasRole("BUYER")
             .requestMatchers("/", "/home").authenticated()
             .anyRequest().authenticated() // Secure all other endpoints
