@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Checkout</title>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+<div>
+    <h2>Checkout</h2>
+
+    <div>
+        <h3>Cart Items:</h3>
+        <ul>
+            <li th:each="cartItem : ${cartItems}">
+                <span th:text="${cartItem.product.name}">Product Name</span> - 
+                <span th:text="${cartItem.quantity}">Quantity</span> -
+                <span th:text="${cartItem.product.price}">Price</span>
+            </li>
+        </ul>
+    </div>
+
+    <p>Total Price: <span th:text="${totalPrice}">0</span></p>
+
+    <form action="#" method="post">
+        <!-- You can add shipping info or payment details here -->
+        <button type="submit">Complete Purchase</button>
+    </form>
+</div>
+</body>
+</html>

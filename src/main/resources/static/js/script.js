@@ -47,3 +47,34 @@ function updatePlaceholder() {
 		input.type = "number";
 	}
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const quantityInputs = document.querySelectorAll(".quantity-input");
+
+    quantityInputs.forEach(input => {
+        input.addEventListener("change", function () {
+            const productId = this.dataset.productId;
+            const newQuantity = this.value;
+
+            fetch(`/home/buyer/cart/update/${productId}?quantity=${newQuantity}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            })
+            .then(response => response.text()) // Or response.json() if your backend sends JSON
+            .then(data => {
+                if (data.includes("error")) {  // Check for errors in response data
+                    console.error("Error updating cart:", data); // You can customize this message
+                } else {
+                    // Dynamically update the cart on the page with new quantity or success message
+                    console.log("Cart updated successfully");
+                    location.reload(); // This can reload the page or update part of the DOM as needed
+                }
+            })
+            .catch(error => {
+                console.error("Error updating cart:", error);  // Handle fetch errors
+            });
+        });
+    });
+});
