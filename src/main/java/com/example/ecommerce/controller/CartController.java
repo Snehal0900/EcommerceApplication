@@ -75,15 +75,4 @@ public class CartController {
         
         return "redirect:/home/buyer/cart/view";
     }
-
-    // Checkout - Proceed with the checkout process (You can define the next steps here)
-    @Secured("ROLE_BUYER")
-    @GetMapping("/checkout")
-    public String checkout(Model model, Authentication authentication) {
-        BigDecimal totalPrice = cartService.getTotalPrice(authentication);
-
-        model.addAttribute("totalPrice", totalPrice);
-        // You can proceed with order processing here
-        return "checkout"; // Checkout page
-    }
 }

@@ -3,8 +3,16 @@
 <head>
     <title>Checkout</title>
     <script src="/js/script.js" defer></script>
+    
 </head>
 <body>
+<nav>
+    	<form th:action="@{/auth/logout}" method="post">
+		    <button type="submit">Logout</button>
+		</form>
+
+        <a th:href="@{/home/buyer/view}">Go back to Shopping</a>
+    </nav>
 <div>
     <h2>Checkout</h2>
 
@@ -20,9 +28,9 @@
     </div>
 
     <p>Total Price: <span th:text="${totalPrice}">0</span></p>
-
-    <form action="#" method="post">
-        <!-- You can add shipping info or payment details here -->
+    
+   
+    <form th:action="@{/home/buyer/success}" method="post">
         <button type="submit">Complete Purchase</button>
     </form>
 </div>

@@ -108,5 +108,29 @@ public class CartImpl implements CartService{
 	                    .multiply(BigDecimal.valueOf(cartItem.getQuantity()))) // Multiply price * quantity
 	            .reduce(BigDecimal.ZERO, BigDecimal::add); // Sum all prices
 	}
+	
+	public void clearCart(User user) {
+	    List<Cart> cartItems = cartRepository.findByUser(user);
+	    cartRepository.deleteAll(cartItems);
+	}
+	
+	public void updateCart(Authentication authentication) {
+		User user = userService.findUserByUsername(authentication.getName());
+	    List<Cart> cartItems = cartRepository.findByUser(user);
+	    
+	    for (Cart cartItem : cartItems) {
+	        Product product = cartItem.getProduct();
+
+	        if (product.getStock() < cartItem.getQuantity()) {
+	        	throw new IllegalArgumentException("Not enough stock for " + product.getName());
+	        }
+
+	        product.setStock(product.getStock() - cartItem.getQuantity());
+	        productService.saveProduct(product);
+	    }
+
+        // Clear the cart after successful "purchase"
+        clearCart(user);     
+	}
 }
 

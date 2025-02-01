@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.security.core.Authentication;
 
 import com.example.ecommerce.entity.Cart;
+import com.example.ecommerce.entity.User;
 
 public interface CartService {
 
@@ -18,4 +19,8 @@ public interface CartService {
 	public BigDecimal getTotalPrice(Authentication authentication);
 	
 	public void removeFromCart(Long productId, Authentication authentication);
+	
+	public void clearCart(User user);
+	
+	public void updateCart(Authentication authentication);
 }

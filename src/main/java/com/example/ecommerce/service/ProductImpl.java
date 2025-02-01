@@ -24,7 +24,14 @@ public class ProductImpl implements ProductService {
 	
 	@Autowired
     private ProductRepository productRepository;
+	
+	@Override
+	public void saveProduct(Product product) {
+		productRepository.save(product);
+		
+	}
 
+	@Override
     public void saveProductWithImage(Product product, MultipartFile image) {
     	String fileName = image.getOriginalFilename();
         Path uploadPath = Paths.get(uploadDir);
@@ -50,6 +57,7 @@ public class ProductImpl implements ProductService {
         productRepository.save(product);
     }
 
+	@Override
     public void updateProductWithImage(Long id, Product updatedProduct, MultipartFile image) {
         Product existingProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -95,10 +103,12 @@ public class ProductImpl implements ProductService {
         productRepository.save(existingProduct);
     }
 
+	@Override
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
+	@Override
     public void deleteProduct(Long id) {
     	 Product existingProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -126,16 +136,18 @@ public class ProductImpl implements ProductService {
 		return productRepository.findAll();
 	}
 	
+	@Override
 	public List<Product> findByName(String name) {
 	    return productRepository.findByNameContainingIgnoreCase(name);
 	}
 
+	@Override
 	public List<Product> findByMinPrice(Double minPrice) {
 	    return productRepository.findByPriceGreaterThanEqual(minPrice);
 	}
 
+	@Override
 	public List<Product> findByMaxPrice(Double maxPrice) {
 	    return productRepository.findByPriceLessThanEqual(maxPrice);
 	}
-
 }

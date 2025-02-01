@@ -8,6 +8,7 @@ import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.User;
 
 public interface ProductService {
+	public void saveProduct(Product product);
 
 	public void saveProductWithImage(Product product, MultipartFile image);
 	

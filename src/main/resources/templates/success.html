@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Success</title>
+    <script src="/js/script.js" defer></script>
+    
+</head>
+<body>
+<nav>
+    	<form th:action="@{/auth/logout}" method="post">
+		    <button type="submit">Logout</button>
+		</form>
+
+        <a th:href="@{/home/buyer/view}">Go back to Shopping</a>
+    </nav>
+<div>
+    <h2>Your Order is successfully placed</h2>
+    
+</div>
+</body>
+</html>

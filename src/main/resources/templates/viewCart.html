@@ -5,6 +5,13 @@
     <script src="/js/script.js" defer></script>
 </head>
 <body>
+	<nav>
+    	<form th:action="@{/auth/logout}" method="post">
+		    <button type="submit">Logout</button>
+		</form>
+
+        <a th:href="@{/home/buyer/view}">Go back to Shopping</a>
+    </nav>
 	<div>
 	    <h2>Your Cart</h2>
 	
@@ -41,11 +48,8 @@
 	
 	    <div th:if="${!cartItems.isEmpty()}">
 	        <p>Total Price: <span th:text="${totalPrice}">0</span></p>
-	        <a href="#" th:href="@{/home/buyer/cart/checkout}">Proceed to Checkout</a>
+	        <a href="#" th:href="@{/home/buyer/checkout}">Proceed to Checkout</a>
 	    </div>
-	    
-	    <a th:href="@{/home/buyer/view}">Go back to Shopping</a>
-	
 	</div>
 </body>
 </html>
