@@ -23,4 +23,8 @@ public interface CartService {
 	public void clearCart(User user);
 	
 	public void updateCart(Authentication authentication);
+	
+	public List<Cart> findByProductId(Long productId, Authentication authentication);
+
+	public void delete(Cart cart);
 }

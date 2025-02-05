@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -32,10 +33,14 @@ public class RegisterController {
     
     
     @PostMapping(value = "/register")
-    public String registerWithForm(@ModelAttribute RegisterRequest registerRequest, Model model) {
-    	 System.out.println("Password " + registerRequest.getPassword());
-        userService.registerUser(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getRole());
-        model.addAttribute("message", "User registered successfully!");
-        return "redirect:/auth/login"; // Redirect for Thymeleaf form submission
+    public String registerWithForm(@ModelAttribute RegisterRequest registerRequest, RedirectAttributes redirectAttributes) {
+    	if (userService.usernameExists(registerRequest.getUsername())) {
+        	redirectAttributes.addFlashAttribute("error", registerRequest.getUsername() + " already exists. Try again with another username");
+        	return "redirect:/register";
+        }
+        else {
+        	userService.registerUser(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getRole());
+        	return "redirect:/auth/login";
+        }
     }
 }

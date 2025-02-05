@@ -1,32 +1,68 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Edit Product</title>
+    <title>Edit Products</title>
+    <script src="/js/script.js" defer></script>
+    <link rel="stylesheet" th:href="@{/css/sellerStyle.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-<body>
-    <h1>Edit Product</h1>
-    <form th:action="@{/seller/products/{id}/edit(id=${product.id})}" method="post" enctype="multipart/form-data">
-        <input type="hidden" th:value="${product.id}" />
+<body class="seller-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>Seller</h2>
+        <ul>
+            <li><a th:href="@{/home/seller/products/view}"><i class="fa fa-home"></i> Home</a></li>
+            <li>
+                <form th:action="@{/auth/logout}" method="post">
+                    <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </li>
+        </ul>
+    </aside>
 
-        <label for="name">Product Name:</label>
-        <input type="text" id="name" name="name" th:value="${product.name}" required /><br><br>
+    <main class="seller-main">
+    	<header>
+            <h1><span th:text="${sellerName}"></span></h1>
+        </header>
 
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" th:text="${product.description}" required></textarea><br><br>
-
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" th:value="${product.price}" step="0.01" required /><br><br>
-
-        <label for="stock">Stock:</label>
-        <input type="number" id="stock" name="stock" th:value="${product.stock}" required /><br><br>
-
-        <label for="image">Product Image:</label>
-        <input type="file" id="image" name="image" accept="/uploads/images/*" /><br><br>
-        <p>Current Image:</p>
-        <img th:src="@{${product.imagePath}}" alt="Product Image" width="100" height="100" /><br><br>
-
-        <button type="submit">Save Changes</button>
-        <a th:href="@{/seller/products/view}">Cancel</a>
-    </form>
+		<section class="container-summary">
+			<form th:action="@{/home/seller/products/{id}/edit(id=${product.id})}" method="post" enctype="multipart/form-data" class="form-container">
+				<div class="form-group">
+				<input type="hidden" th:value="${product.id}" /> 
+				<label for="name">Product Name:</label> <input type="text" id="name" name="name" th:value="${product.name}" required />
+				</div>
+				
+				<div class="form-group">
+					<label for="description">Description:</label> 
+					<textarea id="description" name="description" th:text="${product.description}" required></textarea>
+				</div>
+				
+				<div class="form-group">
+					<label for="price">Price:</label> 
+					<input type="number" id="price" name="price" th:value="${product.price}" min ="1" required />
+				</div>
+				
+				<div class="form-group">
+					<label for="stock">Stock:</label> 
+					<input type="number" id="stock" name="stock" th:value="${product.stock}" min ="1" required />
+				</div>
+				
+				<div class="form-group">
+					<label for="image">Product Image:</label> 
+					<input type="file" id="image" name="image" accept="/uploads/images/*" />
+				</div>
+					
+				<div class="form-group">
+					<label>Current Image:</label>
+					<img th:src="@{${product.imagePath}}" alt="Product Image" width="100" height="100" />
+				</div>
+				
+				<div class="button-group">
+					<button type="submit" class="btn">Save Changes</button>
+					<a th:href="@{/home/seller/products/view}" class="btn cancel">Cancel</a>
+				</div>
+			</form>
+		</section>
+	</main>
 </body>
 </html>

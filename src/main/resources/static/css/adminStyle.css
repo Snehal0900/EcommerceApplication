@@ -1,0 +1,339 @@
+/* General */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Fixing the Body Layout */
+body {
+    background-color: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #343a40;
+    color: white;
+    padding: 20px;
+    height: 100vh;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    background: #495057;
+    text-align: center;
+}
+
+.sidebar ul li a:hover {
+    background: #6c757d;
+}
+
+/* Logout */
+.logout-btn {
+    background-color: #495057;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.logout-btn:hover {
+    background-color: #6c757d;
+}        
+
+/* Admin Dashboard Layout */
+.admin-body {
+    display: flex;
+    height: 100vh;
+}
+
+/* Main Content */
+.admin-main {
+    flex-grow: 1;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Dashboard Summary */
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+    padding: 20px;
+}
+
+/* Cards */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card i {
+    font-size: 30px;
+    color: #495057;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.card p {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Sections */
+.admin-actions {
+    margin-top: 30px;
+}
+
+.admin-actions .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.admin-actions .btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #495057;
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: 0.3s ease-in-out;
+}
+
+.admin-actions .btn:hover {
+    background-color: #6c757d;
+}
+
+.admin-actions .btn i {
+    font-size: 18px;
+}
+
+
+/* Container */
+.container {
+    width: 90%;
+    max-width: 1000px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.admin-header h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.btn {
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+.edit-btn {
+    background-color: #343a40;
+    color: white;
+}
+
+.delete-btn {
+    background-color: #343a40;
+    color: white;
+}
+
+/* Table */
+.table-container {
+	margin-top: 30px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+table th, table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: #343a40;
+    color: white;
+}
+
+.role-list {
+    list-style: none;
+    padding: 0;
+}
+
+.role-list li {
+    padding: 5px;
+    margin: 3px;
+    display: inline-block;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+.container-summary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    padding: 20px;
+}
+
+/* Form Container */
+.form-container {
+	margin-top: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 350px; /* Slightly wider for better layout */
+    text-align: left; /* Align text to left */
+    min-height: 250px; /* Adjust height as needed */
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 12px; /* Reduce gap */
+    padding-top: 10px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* Input Fields */
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #495057;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #6c757d;
+}
+
+/* Cancel Button */
+.btn.cancel {
+    background-color: #6c757d;
+}
+
+.btn.cancel:hover {
+    background-color: #5a6268;
+}
+
+/* Table Styling */
+.table-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.error-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}

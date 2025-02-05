@@ -2,35 +2,56 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Add Products</title>
+    <script src="/js/script.js" defer></script>
+    <link rel="stylesheet" th:href="@{/css/sellerStyle.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-<body>
-    <h1>Add New Product</h1>
-    <a th:href="@{/seller/products/view}">Back to Product List</a>
+<body class="seller-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>Seller</h2>
+        <ul>
+            <li><a th:href="@{/home/seller/products/view}"><i class="fa fa-home"></i> Home</a></li>
+            <li>
+                <form th:action="@{/auth/logout}" method="post">
+                    <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </li>
+        </ul>
+    </aside>
 
-    <form th:action="@{'/seller/products/add'}" method="post" enctype="multipart/form-data">
-        <div>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" th:value="${product?.name}" required/>
-        </div>
-        <div>
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" required th:text="${product?.description}"></textarea>
-        </div>
-        <div>
-            <label for="price">Price:</label>
-            <input type="number" id="price" name="price" step="0.01" required th:value="${product?.price}"/>
-        </div>
-        <div>
-            <label for="stock">Stock:</label>
-            <input type="number" id="stock" name="stock" required th:value="${product?.stock}"/>
-        </div>
-        <div>
-        <label for="image">Image:</label>
-        <input type="file" id="image" name="image" required />
-    </div>
-        <div>
-            <button type="submit">Add Product</button>
-        </div>
-    </form>
+    <main class="seller-main">
+    	<header>
+            <h1><span th:text="${sellerName}"></span></h1>
+        </header>
+
+		<section class="container-summary">
+			<form th:action="@{/home/seller/products/add}" method="post" enctype="multipart/form-data" class="form-container">
+				<div class="form-group">
+					<label for="name">Name:</label> 
+					<input type="text" id="name" name="name" th:value="${product?.name}" required />
+				</div>
+				<div class="form-group">
+					<label for="description">Description:</label> 
+					<textarea id="description" name="description" required th:text="${product?.description}"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="price">Price:</label> 
+					<input type="number" id="price" name="price" required th:value="${product?.price}" min="1" />
+				</div>
+				<div class="form-group">
+					<label for="stock">Stock:</label> 
+					<input type="number" id="stock" name="stock" required th:value="${product?.stock}" min="1" />
+				</div>
+				<div class="form-group">
+					<label for="image">Image:</label> 
+					<input type="file" id="image" name="image" required />
+				</div>
+				<div class="button-group">
+					<button type="submit" class="btn">Add Product</button>
+				</div>
+			</form>
+		</section>
+	</main>
 </body>
 </html>

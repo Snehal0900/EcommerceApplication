@@ -77,7 +77,11 @@ public class CartImpl implements CartService{
 
 	    Cart cartItem = cartRepository.findByUserAndProductId(user, productId);
 
-	    cartRepository.delete(cartItem);
+	    if (cartItem == null) {
+	    	throw new IllegalArgumentException("Product not found.");
+	    } else {
+	    	cartRepository.delete(cartItem);
+	    }
     }
 	
 	public void updateQuantity(Long productId, int quantity, Authentication authentication) {
@@ -131,6 +135,17 @@ public class CartImpl implements CartService{
 
         // Clear the cart after successful "purchase"
         clearCart(user);     
+	}
+
+	@Override
+	public List<Cart> findByProductId(Long productId, Authentication authentication) {
+		return cartRepository.findByProductId(productId);
+	}
+
+	@Override
+	public void delete(Cart cart) {
+		cartRepository.delete(cart);
+		
 	}
 }
 

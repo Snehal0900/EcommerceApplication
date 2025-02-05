@@ -23,19 +23,23 @@ public class PaymentController {
     @Secured("ROLE_BUYER")
     @GetMapping("/checkout")
     public String checkout(Model model, Authentication authentication) {
+    	String buyerName = authentication.getName();
         BigDecimal totalPrice = cartService.getTotalPrice(authentication); // Calculate total price
         
         cartService.updateCart(authentication);
 
         model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("buyerName", buyerName);
         
         return "checkout"; // Thymeleaf view for the checkout page
     }
     
     @Secured("ROLE_BUYER")
-    @PostMapping("/success")
-    public String success(Authentication authentication) {
-        
-        return "success"; // Thymeleaf view for the checkout page
+    @PostMapping("/order")
+    public String success(Model model, Authentication authentication) {
+    	String buyerName = authentication.getName();
+    	model.addAttribute("buyerName", buyerName);
+    	
+        return "order"; // Thymeleaf view for the checkout page
     }
 }

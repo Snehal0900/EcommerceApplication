@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Checkout</title>
+    <title>Order</title>
+    <script src="/js/script.js" defer></script>
     <link rel="stylesheet" th:href="@{/css/buyerStyle.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="/js/script.js" defer></script>
 </head>
 <body class="buyer-body">
     <!-- Sidebar -->
     <aside class="sidebar">
         <h2>Buyer</h2>
         <ul>
-            <li><a th:href="@{/home/buyer/view}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a th:href="@{/home/buyer/view}"><i class="fa fa-home"></i> Home</a></li>
             <li>
                 <form th:action="@{/auth/logout}" method="post">
                     <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
@@ -25,14 +25,11 @@
             <h1><span th:text="${buyerName}"></span></h1>
         </header>
 
-        <section class="checkout-section">
-            <div class="cart-summary">
-                <p>Total Price: <span th:text="${totalPrice}">0</span></p>
-                <form th:action="@{/home/buyer/order}" method="post">
-                    <button type="submit" class="btn checkout-btn"><i class="fas fa-credit-card"></i> Complete Purchase</button>
-                </form>
+        <section class="cart-section">
+            <div>
+                <h2 class="order">Your Order is successfully placed</h2>
             </div>
-        </section>
-    </main>
+		</section>
+	</main>
 </body>
 </html>

@@ -6,11 +6,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.ecommerce.dto.LoginRequest;
 import com.example.ecommerce.util.JwtUtil;
@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/login")
-    public String login(@ModelAttribute LoginRequest loginRequest, HttpServletResponse response, Model model) {   
+    public String login(@ModelAttribute LoginRequest loginRequest, HttpServletResponse response, RedirectAttributes redirectAttributes) {   
     	System.out.println("POST Login endpoint hit!!");
         
         try {
@@ -51,8 +51,7 @@ public class AuthController {
             cookie.setMaxAge(60 * 60 * 24);  // Set the cookie expiry time (1 day)
 
             response.addCookie(cookie);  // Add the cookie to the response
-         
-            System.out.println("token " + token);
+   
             
             boolean isAdmin = userDetails.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
             boolean isSeller = userDetails.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_SELLER"));
@@ -62,7 +61,7 @@ public class AuthController {
                 return "redirect:/admin/dashboard"; // Redirect to admin dashboard for admins
             }
             else if (isSeller) {
-            	return "redirect:/home/seller"; // Redirect to seller home page for sellers
+            	return "redirect:/home/seller/products/view"; // Redirect to seller home page for sellers
             }
             else if(isBuyer){
             	return "redirect:/home/buyer/view"; // Redirect to buyer home page for buyers
@@ -71,8 +70,8 @@ public class AuthController {
             return "redirect:/auth/login";
         } 
         catch (Exception e) {
-            model.addAttribute("error", "Invalid credentials");
-            return "login"; 
+        	redirectAttributes.addFlashAttribute("error", "Invalid credentials. Try again");
+            return "redirect:/auth/login"; 
         }
     }
 

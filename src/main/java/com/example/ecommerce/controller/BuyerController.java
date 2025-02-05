@@ -30,11 +30,13 @@ public class BuyerController {
             return "redirect:/auth/login"; // Redirect to login if not a buyer
         }
 
+        String buyerName = authentication.getName();
         // Fetch all available products for the homepage (filter or paginate if needed)
         List<Product> products = productService.getAllProducts();
 
         // Add products to the model for Thymeleaf rendering
         model.addAttribute("products", products);
+        model.addAttribute("buyerName", buyerName);
 
         return "buyerHome"; // Thymeleaf template for the homepage
     }

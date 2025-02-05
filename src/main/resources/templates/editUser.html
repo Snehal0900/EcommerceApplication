@@ -2,26 +2,59 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Edit User</title>
+    <script src="/js/script.js" defer></script>
+    <link rel="stylesheet" th:href="@{/css/adminStyle.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-<body>
-    <h1>Edit User</h1>
-    <form th:action="@{'/admin/user/' + ${user.id} + '/edit'}" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" th:value="${user.username}" required /><br><br>
+<body class="admin-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>Admin</h2>
+        <ul>
+            <li><a th:href="@{/admin/dashboard}" class="btn"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a th:href="@{/admin/users}">👤 View Users</a></li>
+            <li><a th:href="@{/admin/roles}">🔑 Manage Roles</a></li>
+            <li><a th:href="@{/admin/createRolePage}">➕ Create Role</a></li>
+            <li>
+                <form th:action="@{/auth/logout}" method="post">
+                    <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </li>
+        </ul>
+    </aside>
+    
+    <main class="admin-main">
+        <header>
+        	<h1>Welcome <span th:text="${adminName}"></span></h1>
+    	</header>
 
-        <label for="role">Role:</label>
-        <label for="role">Role:</label>
-        <select id="role" name="role">
-            <!-- Loop through all roles in the system -->
-            <option th:each="role : ${roles}" 
-                    th:value="${role.name}" 
-                    th:text="${role.name}" 
-                    th:selected="${user.roles.contains(role)}"> 
-            </option>
-        </select><br><br>
+		<section class="container-summary">
+        <form th:action="@{'/admin/user/' + ${user.id} + '/edit'}" method="post" class="form-container">
+            <!-- Username Field -->
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" th:value="${user.username}" required />
+            </div>
 
-        <button type="submit">Save</button>
-        <a th:href="@{/admin/users}">Cancel</a>
-    </form>
+            <!-- Role Selection -->
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select id="role" name="role">
+                    <option th:each="role : ${roles}" 
+                            th:value="${role.name}" 
+                            th:text="${role.name}" 
+                            th:selected="${user.roles.contains(role)}"> 
+                    </option>
+                </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button type="submit" class="btn">Save</button>
+                <a th:href="@{/admin/users}" class="btn cancel">Cancel</a>
+            </div>
+        </form>
+        </section>
+    </main>
 </body>
 </html>

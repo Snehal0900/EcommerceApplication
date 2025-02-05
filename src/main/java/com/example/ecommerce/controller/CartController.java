@@ -30,11 +30,13 @@ public class CartController {
     @Secured("ROLE_BUYER")
     @GetMapping("/view")
     public String viewCart(Model model, Authentication authentication) {
+    	String buyerName = authentication.getName();
         List<Cart> cartItems = cartService.getCart(authentication);
         BigDecimal totalPrice = cartService.getTotalPrice(authentication);
 
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("buyerName", buyerName);
         
         return "viewCart"; // Thymeleaf template to display cart
     }

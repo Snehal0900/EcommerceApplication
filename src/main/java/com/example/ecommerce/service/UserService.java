@@ -20,4 +20,8 @@ public interface UserService {
 	public void editUser(Long userId, String username, String role);
 	
 	public void deleteUser(Long userId);
+	
+	public long countUsers();
+	
+	public boolean usernameExists(String username);
 }

@@ -13,4 +13,6 @@ public interface RolesService {
 	public Roles deleteRoleById(Long id);
 	
 	public List<Roles> getAllRoles();
+	
+	public long countRoles();
 }

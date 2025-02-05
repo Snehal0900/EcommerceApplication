@@ -86,5 +86,15 @@ public class UserImpl implements UserService {
 	    
 		userRepository.deleteById(userId);
 	}
+	
+	@Override
+	public long countUsers() {
+        return userRepository.count();
+    }
+	
+	@Override
+	public boolean usernameExists(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
 
 }

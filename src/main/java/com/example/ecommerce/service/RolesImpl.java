@@ -36,5 +36,10 @@ public class RolesImpl implements RolesService {
 	public List<Roles> getAllRoles() {
 		return rolesRepository.findAll();
 	}
+	
+	@Override
+	public long countRoles() {
+        return rolesRepository.count(); // Uses Spring Data JPA's built-in count() method
+    }
 }
 

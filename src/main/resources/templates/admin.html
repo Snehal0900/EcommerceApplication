@@ -1,25 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/adminStyle.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="/js/script.js" defer></script>
-    <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-    <h1>Admin Dashboard</h1>
-	
-    <nav>
-    	<form th:action="@{/auth/logout}" method="post">
-		    <button type="submit">Logout</button>
-		</form>
+<body class="admin-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>Admin</h2>
+        <ul>
+            <li><a th:href="@{/admin/users}">👤 View Users</a></li>
+            <li><a th:href="@{/admin/roles}">🔑 Manage Roles</a></li>
+            <li><a th:href="@{/admin/createRolePage}">➕ Create Role</a></li>
+            <li>
+                <form th:action="@{/auth/logout}" method="post">
+                    <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </li>
+        </ul>
+    </aside>
 
-        <a href="/admin/users">View Users</a> |
-        <a href="/admin/roles">View Roles</a>  |
-        <a href="/admin/createRolePage">Create Role</a> |
-    </nav>
+    <!-- Main Content -->
+	<main class="admin-main">
+    <header>
+        <h1>Welcome <span th:text="${adminName}"></span></h1>
+    </header>
 
-    <div>
-        <h2>Welcome to the Admin Dashboard</h2>
-    </div>
+    <!-- Dashboard Summary -->
+    <section class="dashboard-summary">
+        <div class="card">
+            <i class="fas fa-users"></i>
+            <h3>Total Users</h3>
+            <p th:text="${userCount}">100</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-user-shield"></i>
+            <h3>Total Roles</h3>
+            <p th:text="${roleCount}">5</p>
+        </div>
+    </section>
+
+    <!-- Admin Actions -->
+    <section class="admin-actions">
+        <h2>Manage</h2>
+        <div class="action-buttons">
+            <a th:href="@{/admin/users}" class="btn"><i class="fas fa-user-cog"></i> Manage Users</a>
+            <a th:href="@{/admin/roles}" class="btn"><i class="fas fa-user-tag"></i> Manage Roles</a>
+            <a th:href="@{/admin/createRolePage}" class="btn"><i class="fas fa-plus"></i> Create New Role</a>
+        </div>
+    </section>
+</main>
+
 </body>
 </html>
